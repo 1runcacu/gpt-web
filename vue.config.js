@@ -16,12 +16,13 @@ module.exports = defineConfig({
       index: '/'
     },
     proxy:{
-      // '/CONNECT':{
-      //   target: 'http://localhost:8101',
-      //   changeOrigin: true,
-      //   secure:false,
-      //   pathRewrite: {
-      //     '/CONNECT': ''
+      // '/api':{
+      //     target: 'https://ai.bln.cn/api',
+      //     changeOrigin: true,
+      //     secure:false,
+      //     // pathRewrite: {
+      //     //   '/api': ''
+      //     // }
       //   }
       },
     },

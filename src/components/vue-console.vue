@@ -1,12 +1,12 @@
 <template>
     <winUiVue :resizeAble="true" @close="closeWin" :width="WH" height="40vh" v-show="show"
-        minWidth="300px" minHeight="300px"
+        minWidth="500px" minHeight="500px" v-dom-resize="resizeFn"
     >
         <template #head>
           <div><b>{{title}}</b></div>
         </template>
         <div class="body">
-            <vueChatVue class="right"/>
+            <vueChatVue :width="WH" class="right"/>
         </div>
     </winUiVue>
 </template>
@@ -17,9 +17,6 @@ import { ref,defineProps,defineEmits, inject, onMounted, onUnmounted,computed } 
 import winUiVue from './win-ui.vue';
 import vueChatVue from './vue-chat.vue';
 
-const console = data=>{
-
-}
 
 const props = defineProps({
     show:{
@@ -28,16 +25,16 @@ const props = defineProps({
     }
 });
 
-const ctrlHandle = (v)=>{
-
-}
-
 const selectItems = (index)=>{
 }
 
 const title = ref("CHATGPT");
 
-const WH = computed(()=>(window.innerWidth>500?500:window.innerWidth)+"px");
+const WH = ref((window.innerWidth>500?500:window.innerWidth)+"px");// computed(()=>();
+
+const resizeFn = el=>{
+    WH.value = el.style.width;
+}
 
 </script>
 

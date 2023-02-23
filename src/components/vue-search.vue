@@ -13,12 +13,6 @@
             />
             <el-button @click="search">点击搜索</el-button>
         </div>
-        <!-- <vue-prism-editor
-            v-model="showText"
-            highlight="javascript"
-            :line-numbers="true"
-            :readonly="false"
-        /> -->
         <div class="body">
             <textarea class="form-control result" id="chatgpt-response" 
             rows="26" resize="none" v-model="showText"
@@ -32,7 +26,7 @@ import { getCurrentInstance,onMounted,ref } from 'vue';
 import { Search } from '@element-plus/icons-vue';
 // import { ChatGPTAPI } from 'chatgpt';
 import { ElLoading } from 'element-plus'
-import ChatGPTAPI from "@/api/chatgpt";
+// import ChatGPTAPI from "@/api/chatgpt";
 import {sendMessage} from "@/api/message";
 
 // import WebSocket from 'isomorphic-ws/browser';
@@ -50,7 +44,7 @@ function wait(text="等待结果中"){
 
 const searchText = ref("js编写快速排序");
 
-const apiKey = "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";
+
 
 // const api = new ChatGPTAPI({ 
 //     // endpoint: 'wss://api.chatgpt.com/v1/stream',
@@ -62,13 +56,15 @@ const apiKey = "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";
 //     } 
 // });
 
-const api = new ChatGPTAPI(apiKey);
+// const api = new ChatGPTAPI(apiKey);
 
 const showText = ref("");
 // console.log(api);
 
 function write(response){
+    // console.log(response);
     // const responseText = document.getElementById("chatgpt-response");
+    if(typeof response !== "string")response = "error";
     showText.value = "";
     // responseText.innerHTML = ""
     let index = 0;
@@ -78,7 +74,7 @@ function write(response){
         if (index >= response.length) {
             clearInterval(interval);
         }
-    }, 5);
+    }, 0);
 }
 
 const test = `\`\`\`js
@@ -140,14 +136,14 @@ const search = async (e)=>{
         ctx.$message({type:"warning",message:"发送内容不为空哦~"});
     }else{
         const ld = wait();
-        console.log(searchText.value);//"js编写快速排序算法"
+        // console.log(searchText.value);//"js编写快速排序算法"
         // const res = await api.sendMessage(searchText.value,{
             
         // }).catch(err=>err);
         // const res = await api.search(searchText.value).catch(err=>err);
         const res = await sendMessage(searchText.value).catch(err=>err);
         ld.close();
-        console.log(res);
+        // console.log(res);
         write(res);
     }
 }
@@ -170,7 +166,7 @@ onMounted(async ()=>{
 .el-textarea {
     /*滚动条整体部分*/
     .el-textarea__inner::-webkit-scrollbar {
-        width: 7px;
+        width: 3px;
         height: 7px;
     }
     /*滚动条的轨道*/
@@ -182,6 +178,7 @@ onMounted(async ()=>{
         background-color: rgba(144, 147, 153, 0.3);
         border-radius: 5px;
         border: 1px solid #f1f1f1;
+        width: 4px;
         box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
     }
     .el-textarea__inner::-webkit-scrollbar-thumb:hover {
@@ -222,10 +219,11 @@ textarea{
     align-items: center;
 }
 .header{
+    margin-top: 25px;
     height: 200px;
     width: 100%;
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
 }
 .body{
@@ -234,7 +232,6 @@ textarea{
     color: rgb(24, 1, 13);
 }
 .header>.el-button{
-    margin-top: 15px;
     margin-left: 0px;
     height: 136px;
 }

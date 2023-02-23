@@ -296,6 +296,36 @@ const directives = {
         })
       }
     })()
+  },
+  domResize:{
+    mounted(el, binding) {
+      const { value: handleFn } = binding //value即是自定义指定绑定的值，可以使函数或者是其他属性
+      let obj = document.createElement('object');
+      obj.style.display = 'block'
+      obj.style.position = 'absolute'
+      obj.style.top = '0px'
+      obj.style.left = '0px'
+      obj.style.width = '100%'
+      obj.style.height = '100%'
+      obj.style.border = 'none'
+      obj.style.padding = '0'
+      obj.style.margin = '0'
+      obj.style.opacity = '0'
+      obj.style.zIndex = '-1000'
+      obj.style.pointerEvents = 'none'
+      obj.type = 'text/html'
+      obj.tabindex = "-1"
+      obj.type = "text/html"
+      obj.data = "about:blank"
+      obj['aria-hidden'] = "true"
+      el.appendChild(obj);
+      obj.onload = () => {
+        obj.contentDocument.defaultView.addEventListener('resize', () => {
+          handleFn(el)
+          // 也可直接将width/height值暴露出去
+        })
+      }
+    }
   }
 };
 

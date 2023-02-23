@@ -1,5 +1,5 @@
 // import axios from "axios";
-
+import { v4 } from "uuid";
 // const AJAX = axios.create({
 //     baseURL: "/",
 //     timeout: 5000,
@@ -132,6 +132,14 @@ export function loader(file){
             reject();
         }
     });
+}
+
+export function fetchUserID(){
+    let userID = localStorage.getItem("userID");
+    if(userID)return userID;
+    userID = v4();
+    localStorage.setItem("userID",userID);
+    return userID;
 }
 
 export default {

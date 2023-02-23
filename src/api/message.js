@@ -1,6 +1,12 @@
 const axios = require('axios');
 
-const baseURL = 'https://api.openai.com/v1/';
+// POST https://ai.bln.cn/api/text
+// // body 
+// {
+//   prompt: string;
+// }
+
+const baseURL =  'https://api.openai.com/v1/';//completions 'http://127.0.0.1:6790/api';
 const apiKey = "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";
 const model = 'text-davinci-003';
 const instance = axios.create({
@@ -21,7 +27,16 @@ async function sendMessage(text, context) {
     // ...(context && { context }),
   };
 
-  const response = await instance.post('/completions', data);
+  const response = await instance.post('/completions', data).catch(err=>{
+    return {
+      data:{
+        choices:[{
+          text:err.message||"error"
+        }]
+      }
+    }
+  });
+  console.log(response);
   const { choices } = response.data;
   return choices[0].text.trim();
 }

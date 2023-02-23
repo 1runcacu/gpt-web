@@ -3,15 +3,15 @@
         <div id="msg" class="box" ref="messageBox">
             <template v-for="(item,index) in List" :key="index">
                 <div v-if="timerShow(item,index)" class="timer">{{new Date(parseInt(item.date)).toLocaleString()}}</div>
-                <vueMsgVue :message="item.message" :uid="item.uid" :uuid="config.user.uid" />
+                <vueMsgVue :width="width" :message="item.message" :uid="item.uid" :uuid="config.user.uid" />
             </template>
             <div ref="last"></div>
         </div>
         <div id="input">
-            <textarea v-model="Msg" cols="2" rows="20" class="box" placeholder="请输入对话内容，ctrl+enter发送" @keydown.enter.native="keyDown"></textarea>
             <div class="bar">
                 <el-button size="small" type="primary" @click="sendMessage">发送</el-button>
             </div>
+            <textarea v-model="Msg" cols="2" rows="20" class="box" placeholder="请输入对话内容，ctrl+enter发送" @keydown.enter.native="keyDown"></textarea>
         </div>
     </div>
 </template>
@@ -19,24 +19,23 @@
 <script setup>
 import { getCurrentInstance, inject,onMounted,onUnmounted,computed,ref,nextTick } from 'vue';
 import vueMsgVue from './vue-msg.vue';
+import Message from "@/api/message";
+import {fetchUserID} from "@/api/util";
 
 const ctx = getCurrentInstance().appContext.config.globalProperties;
-
+const user = fetchUserID();
+console.log(user)
 const last = ref(null);
 const messageBox = ref(null);
-
-const message = data=>{
-    const {rid,uid,event,frame} = data;
-    switch(event){
-        case "refresh":
-            MessageList = frame.data;
-            break;
-        default:
-            MessageList.push(frame);
-            break;
+const config = ref({
+    user:{
+        uid:"USER"
     }
-    RFS.value = ID();
-}
+});
+
+const props = defineProps({
+    width:Number
+});
 
 const dt = 3*60*1000;
 
@@ -51,6 +50,34 @@ var ID = ()=>Date.now().toString(36);
 const RFS = ref("");
 
 let MessageList = [];
+
+const test = `\`\`\`js
+function quickSort(arr) {\n
+  if (arr.length <= 1) {\n
+    return arr;
+  }
+  let left = [],
+    right = [],
+    baseDot = Math.round(arr.length / 2),
+    base = arr.splice(baseDot, 1)[0];
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] < base) {
+      left.push(arr[i]);
+    } else {
+      right.push(arr[i]);
+    }
+  }
+  return quickSort(left).concat([base], quickSort(right));
+}
+\`\`\``;
+
+// for(let i=0;i<1;i++){
+//     MessageList.push({
+//         message:test,
+//         uid:"CHATGPT",
+//         date:Date.now(),
+//     });
+// }
 
 const Msg = ref("");
 
@@ -69,7 +96,7 @@ const keyDown = (e)=>{
 }
 
 
-const sendMessage = ()=>{
+const sendMessage = async ()=>{
     if(Msg.value){
         // chat("broadCast",{
         //     message:Msg.value
@@ -77,8 +104,22 @@ const sendMessage = ()=>{
         if(/^[ \n\t]+$/g.test(Msg.value)){
             ctx.$message({type:"warning",message:"发送内容不为空哦~"});
         }else{
-            Msg.value = "";
             ctx.$message({type:"success",message:"发送成功~"});
+            MessageList.push({
+                uid:"USER",
+                message:Msg.value,
+                date:Date.now()
+            });
+            RFS.value = ID();
+            const req = Msg.value;
+            Msg.value = "";
+            const text = await Message.sendMessage(req).catch(err=>err);
+            MessageList.push({
+                uid:"CHATGPT",
+                message:(typeof text==="string")?text:"error",
+                date:Date.now()
+            });
+            RFS.value = ID();
         }
     }else{
         ctx.$message({type:"warning",message:"发送内容不为空哦~"});
@@ -116,7 +157,7 @@ const chat = (event,frame={})=>{
 }
 #input{
     flex: 1;
-    height: 200px;
+    height: 120px;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -126,7 +167,7 @@ const chat = (event,frame={})=>{
 }
 #input>textarea{
     width: calc(100% - 20px);
-    height: 120px;
+    height: 100%;
     resize: none;
     border-radius: .2rem;
     box-shadow: 1px 1px 3px gray;
@@ -137,7 +178,7 @@ const chat = (event,frame={})=>{
     width: calc(100% - 20px);
     padding-right: 20px;
     flex-direction: row-reverse;
-    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 /* 滚动条和滑块 */

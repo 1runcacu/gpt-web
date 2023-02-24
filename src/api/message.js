@@ -6,7 +6,7 @@ const axios = require('axios');
 //   prompt: string;
 // }
 
-const baseURL =  'https://api.openai.com/v1/';//completions 'http://127.0.0.1:6790/api';
+const baseURL =  '/api' //'https://api.openai.com/v1/';//completions 'http://127.0.0.1:6790/api';
 const apiKey = "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";
 const model = 'text-davinci-003';
 const instance = axios.create({

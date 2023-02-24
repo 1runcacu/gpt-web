@@ -9,7 +9,7 @@
                 :autosize="{ minRows: 6, maxRows: 6 }"
                 class="input" placeholder="输入要搜索的内容" v-model="searchText"  
                 :prefix-icon="Search"
-                @keydown.enter.native="keyDown"
+                @keydown.enter="keyDown"
             />
             <el-button @click="search">点击搜索</el-button>
         </div>
@@ -78,40 +78,6 @@ function write(response){
 }
 
 const test = `\`\`\`js
-function quickSort(arr) {\n
-  if (arr.length <= 1) {\n
-    return arr;
-  }
-  let left = [],
-    right = [],
-    baseDot = Math.round(arr.length / 2),
-    base = arr.splice(baseDot, 1)[0];
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] < base) {
-      left.push(arr[i]);
-    } else {
-      right.push(arr[i]);
-    }
-  }
-  return quickSort(left).concat([base], quickSort(right));
-}
-function quickSort(arr) {\n
-  if (arr.length <= 1) {\n
-    return arr;
-  }
-  let left = [],
-    right = [],
-    baseDot = Math.round(arr.length / 2),
-    base = arr.splice(baseDot, 1)[0];
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] < base) {
-      left.push(arr[i]);
-    } else {
-      right.push(arr[i]);
-    }
-  }
-  return quickSort(left).concat([base], quickSort(right));
-}
 function quickSort(arr) {\n
   if (arr.length <= 1) {\n
     return arr;

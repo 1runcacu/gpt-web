@@ -12,8 +12,7 @@
 </template>
 
 <script setup>
-import { ElMenu,ElMenuItem} from 'element-plus';
-import { ref,defineProps,defineEmits, inject, onMounted, onUnmounted,computed } from 'vue';
+import { ref,defineProps } from 'vue';
 import winUiVue from './win-ui.vue';
 import vueChatVue from './vue-chat.vue';
 
@@ -25,10 +24,7 @@ const props = defineProps({
     }
 });
 
-const selectItems = (index)=>{
-}
-
-const title = ref("CHATGPT");
+const title = ref("设置");
 
 const WH = ref((window.innerWidth>500?500:window.innerWidth)+"px");// computed(()=>();
 

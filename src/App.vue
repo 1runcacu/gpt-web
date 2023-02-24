@@ -3,23 +3,23 @@
     <b>OPENAI - GPT</b>
     <div class="auto"></div>
     <el-button :icon="ChatDotRound" type="primary" @click="()=>consoleShow=true" size="large" circle/>
+    <el-button :icon="Setting" type="info" @click="()=>consoleShow2=true" size="large" circle/>
     <div class="mr"></div>
   </div>
   <vueSearch />
-  <vueConsole :show="consoleShow" @close="consoleHandle" />
+  <vueMessage :show="consoleShow" @close="()=>consoleShow=false" />
+  <vueSetting :show="consoleShow2" @close="()=>consoleShow2=false"/>
 </template>
 
 <script setup>
-import vueConsole from '@/components/vue-console.vue';
+import vueMessage from '@/components/vue-message.vue';
+import vueSetting from '@/components/vue-setting.vue';
 import vueSearch from './components/vue-search.vue';
-import { ChatDotRound } from '@element-plus/icons-vue';
+import { ChatDotRound, Setting } from '@element-plus/icons-vue';
 import { ref } from 'vue';
 
 const consoleShow = ref(false);
-
-const consoleHandle = (val)=>{
-    consoleShow.value = false;
-}
+const consoleShow2 = ref(false);
 
 </script>
 
